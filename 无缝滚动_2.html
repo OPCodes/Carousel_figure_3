@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+        body {
+        	margin: 0; 
+        	background: #000;
+        }
+        img { 
+        	border: none;
+        }
+        #tab { 
+        	position: relative;
+        	margin: 40px auto;
+        	width: 600px;
+        	height: 400px;
+        	border-radius: 20px;
+        	background: #404040;
+            overflow: hidden;
+        }
+        #tab a{
+        	position: absolute;
+        	top:170px;
+        	width: 60px;
+        	height: 60px;
+        	line-height:60px;
+        	border-radius: 50%;
+        	opacity: 0.4;
+        	font-size:40px;
+        	text-align: center;
+        	text-decoration: none;
+        	color: #fff;
+        	background: #ef9408;
+        	z-index: 2;
+        }
+        #tab a:hover { 
+        	opacity: 1;
+        }
+        #prev { 
+        	left:10px;
+        }
+        #next { 
+        	right: 10px;
+        }    
+        #list {
+        	position: absolute;
+        	left: 0;
+        	top: 0;
+        	list-style: none;
+			margin: 0;
+			padding: 0;
+			height: 400px;
+        }
+        #list li {
+        	float: left;
+        	width: 600px;
+			height: 400px;
+        }
+        
+	</style>
+	<script src="js/MTween.js"></script>
+	<script>
+        /*
+            实现了图片轮播，边界判断在轮播开始之前。
+        */
+		window.onload = function (){
+			var tab = document.getElementById("tab");
+		 	var prev = document.getElementById("prev");
+		 	var next = document.getElementById("next");
+		 	var list = document.getElementById("list")
+		 	var allLis = list.getElementsByTagName("li");
+		 	var len = allLis.length;
+            var oneLiW = parseInt(getComputedStyle(allLis[0]).width);
+		 	list.style.width = len * oneLiW + "px";
+            var n = 1;
+            list.style.left = -n * oneLiW + "px";
+            var timer;
+
+            run();
+            function run(){
+                clearInterval(timer);
+                timer = setTimeout(function (){
+                    timer = setInterval(function (){
+                        n++;
+                        // 轮播到最后一张的时候，拉回到第一张。
+                        if( n === len ){
+                            n = 1;
+                            list.style.left = - n * oneLiW + "px";
+                            n++;
+                        }
+                        var l = - n * oneLiW;
+                        MTween(list,"left",1000,l,"linear");
+                    },2000);
+                },2000);
+            }
+
+            prev.onclick = function (){
+                if( list.timer ){
+                    return;
+                }
+                n--;
+                if( n === 0 ){
+                    n = len - 1;
+                    list.style.left = - n * oneLiW + "px";
+                    n--;
+                }
+                var l = - n * oneLiW;
+                MTween(list,"left",1000,l,"linear");
+            }
+
+            next.onclick = function (){
+                if( list.timer ){
+                    return;
+                }
+                n++;
+                if( n === len ){
+                    n = 1;
+                    list.style.left = - n * oneLiW + "px";
+                    n++;
+                }
+                var l = - n * oneLiW;
+                MTween(list,"left",1000,l,"linear");
+            }
+
+		 	prev.onmouseover = function (){
+		 		clearInterval(timer);
+		 	}
+
+            prev.onmouseout = function (){
+                clearInterval(timer);
+                run();
+            }
+		 	
+		 	next.onmouseover = function (){
+		 		clearInterval(timer);
+		 	}
+
+            next.onmouseout = function (){
+                clearInterval(timer);
+                run();
+            }
+		}
+	</script>
+</head>
+<body>
+    <div id="tab">
+        <a id="prev" href="javascript:;"><</a>
+        <a id="next" href="javascript:;">></a>
+        <ul id="list">
+            <li>
+                <img src="img/500.jpg" alt="">
+            </li>
+        	<li>
+        		<img src="img/100.jpg" alt="">
+        	</li>
+        	<li>
+        		<img src="img/200.jpg" alt="">
+        	</li>
+        	<li>
+        		<img src="img/300.jpg" alt="">
+        	</li>
+        	<li>
+        		<img src="img/400.jpg" alt="">
+        	</li>
+        	<li>
+        		<img src="img/500.jpg" alt="">
+        	</li>
+            <li>
+                <img src="img/100.jpg" alt="">
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
